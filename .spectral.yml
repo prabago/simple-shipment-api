@@ -1,0 +1,53 @@
+formats:
+  - oas3
+extends:
+  - 'spectral:oas'
+rules:
+  api-name-in-kebab-case:
+    given: $.info.title
+    then:
+      function: pattern
+      functionOptions:
+        match: '^[a-z][a-z0-9\-]*$'
+    type: style
+    recommended: true
+    message: Error in the format of the api title
+    description: Error in the format of the api title must be in kebab-case
+    severity: error
+  oas2-schema: false
+  version-major-api:
+    given: $.info.version
+    then:
+      function: pattern
+      functionOptions:
+        match: '^[v][0-9\-]*$'
+    type: style
+    recommended: true
+    message: 'Error in the format of the api version [only permitted major vesion, example v1]'
+    description: 'Error in the format of the operations must be major version, example v1'
+    severity: error
+  info-contact: info
+  oas2-valid-definition-example: error
+  info-description: error
+  security-oauth:
+    description:  The API must contain the security mechanism OAuth2
+    message: The API must contain the security mechanism OAuth2 
+    recommended: true
+    severity: error
+    formats:
+    - oas3
+    type: style
+    given: "$"
+    then:
+      field: $.components.securitySchemes.[*].type
+      function: truthy
+  paths-kebab-case:
+    description: Should paths be kebab-case.
+    message: '{{property}} is not kebab-case: {{error}}'
+    severity: error
+    recommended: true
+    given: $.paths[*]~
+    then:
+      function: pattern
+      functionOptions:
+        match: "^(\/[a-z0-9-{}]+)+$"

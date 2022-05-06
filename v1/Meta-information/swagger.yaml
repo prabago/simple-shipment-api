@@ -1,0 +1,320 @@
+openapi: 3.0.1
+info:
+  title: simple-shipment-api
+  description: API para la obtención de usuarios
+  contact:
+    name: Indra by Minsait
+  version: 'v1'
+servers:
+  - url: 'https://dev-simple-hmi.puertos.es'
+    description: PDE
+  - url: 'http://opepuesim-dev-simple-hmi.apps.k8s.mova.indra.es'
+    description: INDRA
+security:
+  - default: []
+tags:
+  - name: events
+    description: prueba
+  - name: simple
+    description: prueba
+  - name: shipment
+paths:
+  /Events:
+    post:
+      tags:
+        - events
+      summary: Register event
+      description: Registrar evento
+      operationId: registerEvent
+      requestBody:
+        description: Petición de eventos
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventCommandMinimumPayload'
+            examples:
+              example-1:
+                value:
+                  externalReference: '93'
+                  event: Orden de Transporte
+                  consignorEntityId: B12345678
+                  consignorEntityName: Earth Distribution
+                  consigneeEntityId: B31848965
+                  consigneeEntityName: Agro South SL
+                  transportOperatorEntityId: B54865268
+                  transportOperatorEntityName: Express2Go
+                  notifyEntityId:
+                    - B65789625
+                  notifyEntityName:
+                    - DV Group
+                  departureTime: '2021-11-25T09:40:35.794Z'
+                  originLocation: SPAIN - MADRID
+                  arrivalTime: '2021-11-25T15:45:35.794Z'
+                  destinationLocation: SPAIN - ALGECIRAS
+                  transportMode: Carretera
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventCommandMinimumPayload'
+        '400':
+          description: error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleException'
+        '401':
+          description: unauthorized
+      security:
+        - default: []
+      x-auth-type: Application & Application User
+      x-throttling-tier: Unlimited
+      x-wso2-application-security:
+        security-types:
+          - oauth2
+        optional: false
+  /pruebaAHora:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-pruebaAHora
+components:
+  schemas:
+    EventCommandMinimumPayload:
+      type: object
+      properties:
+        externalReference:
+          type: string
+        simpleShipmentId:
+          maxLength: 16
+          minLength: 0
+          type: string
+        simpleEventId:
+          maxLength: 16
+          minLength: 0
+          type: string
+        event:
+          maxLength: 50
+          minLength: 0
+          type: string
+        consignorEntityId:
+          maxLength: 10
+          minLength: 0
+          type: string
+        consignorEntityName:
+          type: string
+        consigneeEntityId:
+          maxLength: 10
+          minLength: 0
+          type: string
+        consigneeEntityName:
+          type: string
+        transportOperatorEntityId:
+          maxLength: 10
+          minLength: 0
+          type: string
+        transportOperatorEntityName:
+          type: string
+        notifyEntityId:
+          type: array
+          items:
+            type: string
+        notifyEntityName:
+          type: array
+          items:
+            type: string
+        departureTime:
+          type: string
+          format: date-time
+        originLocation:
+          type: string
+        arrivalTime:
+          type: string
+          format: date-time
+        destinationLocation:
+          type: string
+        transportMode:
+          type: string
+        asJSON:
+          type: string
+    SimpleException:
+      required:
+        - id
+        - idOperation
+        - rawMessage
+        - resource
+      type: object
+      properties:
+        cause:
+          type: object
+          properties:
+            stackTrace:
+              type: array
+              items:
+                type: object
+                properties:
+                  classLoaderName:
+                    type: string
+                  moduleName:
+                    type: string
+                  moduleVersion:
+                    type: string
+                  methodName:
+                    type: string
+                  fileName:
+                    type: string
+                  lineNumber:
+                    type: integer
+                    format: int32
+                  className:
+                    type: string
+                  nativeMethod:
+                    type: boolean
+            message:
+              type: string
+            suppressed:
+              type: array
+              items:
+                type: object
+                properties:
+                  stackTrace:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        classLoaderName:
+                          type: string
+                        moduleName:
+                          type: string
+                        moduleVersion:
+                          type: string
+                        methodName:
+                          type: string
+                        fileName:
+                          type: string
+                        lineNumber:
+                          type: integer
+                          format: int32
+                        className:
+                          type: string
+                        nativeMethod:
+                          type: boolean
+                  message:
+                    type: string
+                  localizedMessage:
+                    type: string
+            localizedMessage:
+              type: string
+        stackTrace:
+          type: array
+          items:
+            type: object
+            properties:
+              classLoaderName:
+                type: string
+              moduleName:
+                type: string
+              moduleVersion:
+                type: string
+              methodName:
+                type: string
+              fileName:
+                type: string
+              lineNumber:
+                type: integer
+                format: int32
+              className:
+                type: string
+              nativeMethod:
+                type: boolean
+        resource:
+          type: string
+        id:
+          type: object
+        idOperation:
+          type: string
+        rawMessage:
+          type: string
+        message:
+          type: string
+        suppressed:
+          type: array
+          items:
+            type: object
+            properties:
+              stackTrace:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    classLoaderName:
+                      type: string
+                    moduleName:
+                      type: string
+                    moduleVersion:
+                      type: string
+                    methodName:
+                      type: string
+                    fileName:
+                      type: string
+                    lineNumber:
+                      type: integer
+                      format: int32
+                    className:
+                      type: string
+                    nativeMethod:
+                      type: boolean
+              message:
+                type: string
+              localizedMessage:
+                type: string
+        localizedMessage:
+          type: string
+  securitySchemes:
+    default:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: ''
+          scopes: {}
+          x-scopes-bindings:
+            'USER:GET': USER#GET
+x-wso2-auth-header: Authorization
+x-wso2-cors:
+  corsConfigurationEnabled: false
+  accessControlAllowOrigins:
+    - '*'
+  accessControlAllowCredentials: false
+  accessControlAllowHeaders:
+    - authorization
+    - Access-Control-Allow-Origin
+    - Content-Type
+    - SOAPAction
+    - apikey
+    - testKey
+  accessControlAllowMethods:
+    - GET
+    - PUT
+    - POST
+    - DELETE
+    - PATCH
+    - OPTIONS
+x-wso2-production-endpoints:
+  urls:
+    - 'http://dev-simple-shipment.puertos.es'
+  type: http
+x-wso2-sandbox-endpoints:
+  urls:
+    - 'http://mock-simple-shipment-api-v1:3200'
+  type: http
+x-wso2-basePath: /simple-shipment-api/v1
+x-wso2-transports:
+  - http
+  - https
+x-wso2-response-cache:
+  enabled: false
+  cacheTimeoutInSeconds: 300

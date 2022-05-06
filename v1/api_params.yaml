@@ -1,0 +1,11 @@
+environments:
+  - name: pde-dev
+    endpoints:
+      production: 
+        url: http://dev-simple-shipment.puertos.es
+      sandbox: 
+        url: http://mock-simple-shipment-api-v1:3200
+deploy:
+  import:
+    update: true
+    preserveProvider: true
